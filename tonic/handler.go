@@ -1,6 +1,7 @@
 package tonic
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"runtime"
@@ -73,7 +74,14 @@ func Handler(h interface{}, status int, options ...func(*Route)) gin.HandlerFunc
 			input := reflect.New(in)
 			// Bind the body with the hook.
 			if err := bindHook(c, input.Interface()); err != nil {
-				handleError(c, BindError{message: err.Error(), typ: in, validationErr: err})
+				bindError := BindError{message: err.Error(), typ: in}
+				switch err := err.(type) {
+				case *json.UnmarshalTypeError:
+					bindError.field = err.Field
+				case validator.ValidationErrors:
+					bindError.validationErr = err
+				}
+				handleError(c, bindError)
 				return
 			}
 			// Bind query-parameters.
