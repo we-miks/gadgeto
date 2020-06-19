@@ -258,6 +258,14 @@ func (be BindError) ValidationErrors() validator.ValidationErrors {
 	return nil
 }
 
+func (be BindError) GetMessage() string {
+	return be.message
+}
+
+func (be BindError) GetField() string {
+	return be.field
+}
+
 // An extractorFunc extracts data from a gin context according to
 // parameters specified in a field tag.
 type extractor func(*gin.Context, string) (string, []string, error)
