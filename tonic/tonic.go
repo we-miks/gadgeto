@@ -97,7 +97,7 @@ func DefaultBindingHookMaxBodyBytes(maxBodyBytes int64) BindHook {
 			return nil
 		}
 		if err := c.ShouldBindWith(i, binding.JSON); err != nil && err != io.EOF {
-			return fmt.Errorf("error parsing request body: %s", err.Error())
+			return err
 		}
 		return nil
 	}
