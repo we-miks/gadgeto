@@ -150,6 +150,14 @@ func RegisterValidation(tagName string, validationFunc validator.Func) error {
 	return validatorObj.RegisterValidation(tagName, validationFunc)
 }
 
+// RegisterTagNameFunc registers a custom tag name function on the validator.Validate instance of the package
+// NOTE: calling this function may instantiate the validator itself.
+// NOTE: this function is not thread safe, since the validator validation registration isn't
+func RegisterTagNameFunc(fn validator.TagNameFunc) {
+	initValidator()
+	validatorObj.RegisterTagNameFunc(fn)
+}
+
 func initValidator() {
 	validatorOnce.Do(func() {
 		validatorObj = validator.New()
