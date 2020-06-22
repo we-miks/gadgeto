@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
@@ -93,10 +92,7 @@ var DefaultBindingHook BindHook = DefaultBindingHookMaxBodyBytes(DefaultMaxBodyB
 func DefaultBindingHookMaxBodyBytes(maxBodyBytes int64) BindHook {
 	return func(c *gin.Context, i interface{}) error {
 		c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, maxBodyBytes)
-		if c.Request.ContentLength == 0 || c.Request.Method == http.MethodGet {
-			return nil
-		}
-		if err := c.ShouldBindWith(i, binding.JSON); err != nil && err != io.EOF {
+		if err := c.ShouldBind(i); err != nil && err != io.EOF {
 			return err
 		}
 		return nil

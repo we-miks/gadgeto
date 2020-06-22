@@ -84,18 +84,8 @@ func Handler(h interface{}, status int, options ...func(*Route)) gin.HandlerFunc
 				handleError(c, bindError)
 				return
 			}
-			// Bind query-parameters.
-			if err := bind(c, input, QueryTag, extractQuery); err != nil {
-				handleError(c, err)
-				return
-			}
 			// Bind path arguments.
 			if err := bind(c, input, PathTag, extractPath); err != nil {
-				handleError(c, err)
-				return
-			}
-			// Bind headers.
-			if err := bind(c, input, HeaderTag, extractHeader); err != nil {
 				handleError(c, err)
 				return
 			}
